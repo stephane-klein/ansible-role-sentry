@@ -1,0 +1,107 @@
+---
+- name: Create {{ sentry_project_path }} directory
+  file:
+    path: "{{ sentry_project_path }}"
+    state: directory
+
+- name: Upload docker-compose.yml to {{ sentry_project_path }}/docker-compose.yml
+  template:
+    src: "docker-compose.yml"
+    dest: "{{ sentry_project_path }}/docker-compose.yml"
+
+- name: Upload docker-compose-tools.yml to {{ sentry_project_path }}/docker-compose-tools.yml
+  template:
+    src: "docker-compose-tools.yml"
+    dest: "{{ sentry_project_path }}/docker-compose-tools.yml"
+
+- name: Upload sentry-config.yml to {{ sentry_project_path }}/sentry-config.yml
+  template:
+    src: sentry-config.yml
+    dest: "{{ sentry_project_path }}/sentry-config.yml"
+
+- name: Pull all Docker images
+  command: docker-compose pull
+  args:
+    chdir: "{{ sentry_project_path }}"
+  changed_when: False
+
+- name: Check if env file exists
+  stat:
+    path: "{{ sentry_project_path }}/env"
+  register: env_file_result
+
+- name: Generate SENTRY_SECRET_KEY
+  docker_container:
+    name: sentry
+    image: sentry:9.0.0
+    command: sentry config generate-secret-key
+    restart_policy : no
+    cleanup: yes
+    detach: false
+  register: generate_sentry_secret_key
+  when: env_file_result.stat.exists == False
+
+- name: Write SENTRY_SECRET_KEY to {{ sentry_project_path }}/env
+  template:
+    src: env
+    dest: "{{ sentry_project_path }}/env"
+  vars:
+    sentry_secret_key: "{{ generate_sentry_secret_key.ansible_facts.docker_container.Output }}"
+  when: env_file_result.stat.exists == False
+
+- name: Start Redis and PostgreSQL services
+  docker_service:
+    project_src: "{{ sentry_project_path }}"
+    services:
+      - redis
+      - postgres
+    state: present
+    pull: yes
+    recreate: smart
+
+- name: Wait PostgreSQL service start
+  command: docker-compose -f docker-compose-tools.yml run --rm wait_postgres
+  args:
+    chdir: "{{ sentry_project_path }}"
+  changed_when: False
+
+- name: Wait Redis service start
+  command: docker-compose -f docker-compose-tools.yml run --rm wait_redis
+  args:
+    chdir: "{{ sentry_project_path }}"
+  changed_when: False
+
+# There is "pip uninstall sentry-plugins" here to fix this bug https://github.com/getsentry/sentry/issues/11302
+- name: Init or upgrade Sentry Database
+  shell: docker-compose run --rm sentry bash -c "pip uninstall sentry-plugins -y; sentry upgrade --noinput"
+  args:
+    chdir: "{{ sentry_project_path }}"
+  changed_when: False
+
+- name: Create Sentry admin user
+  shell: docker-compose run --rm sentry sentry createuser --email {{ sentry_admin_user }}	--password {{ sentry_admin_password }}	--superuser --no-input && touch .ansible_admin_user_created
+  args:
+    chdir: "{{ sentry_project_path }}"
+    creates: .ansible_admin_user_created
+
+- name: Start Sentry services (Sentry + Cron + Worker)
+  docker_service:
+    project_src: "{{ sentry_project_path }}"
+    services:
+      - sentry
+      - cron
+      - worker
+    state: present
+    pull: yes
+    recreate: smart
+
+- name: Upload extract_dsn.py to {{ sentry_project_path }}/extract_dsn.py
+  copy:
+    src: extract_dsn.py
+    dest: "{{ sentry_project_path }}/extract_dsn.py"
+
+- name: Upload display-sentry-dsn.sh to {{ sentry_project_path }}/display-sentry-dsn.sh
+  copy:
+    src: display-sentry-dsn.sh
+    dest: "{{ sentry_project_path }}/display-sentry-dsn.sh"
+    mode: 0700

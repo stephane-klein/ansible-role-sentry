@@ -1,0 +1,22 @@
+# Define where Sentry configuration files are installed (docker-compose.yml...)
+sentry_project_path: "/srv/sentry"
+
+# Define where Sentry PostgreSQL database store its datas
+sentry_postgres_path: "/var/lib/sentry/postgres"
+
+# Define Sentry default admin user
+sentry_admin_user: admin@example.com
+sentry_admin_password: password
+
+# Define this variable to expose Sentry instance via nginx-proxy
+sentry_virtual_host:
+sentry_letsencrypt_host:
+sentry_letsencrypt_email:
+
+sentry_url_prefix: http://sentry.example.com
+sentry_admin_email : admin@example.com
+
+sentry_docker_image_tag: 9.0.0
+
+# It's action flag to uninstall Sentry
+sentry_uninstall: false

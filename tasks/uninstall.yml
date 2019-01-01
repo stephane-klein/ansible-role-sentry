@@ -1,0 +1,21 @@
+---
+- name: Check if {{ sentry_project_path }}/docker-compose.yml exists
+  stat:
+    path: "{{ sentry_project_path }}/docker-compose.yml"
+  register: docker_compose_file
+
+- name: Stop all Sentry services
+  docker_service:
+    project_src: "{{ sentry_project_path }}"
+    state: absent
+  when: docker_compose_file.stat.exists
+
+- name: Remove Sentry data
+  file:
+    path: "{{ sentry_postgres_path }}"
+    state: absent
+
+- name: Remove Sentry Project content
+  file:
+    path: "{{ sentry_project_path }}"
+    state: absent

@@ -1,0 +1,10 @@
+---
+- import_tasks: install.yml
+  when: not sentry_uninstall
+  tags:
+    - sentry
+
+- import_tasks: uninstall.yml
+  when: sentry_uninstall
+  tags:
+    - sentry

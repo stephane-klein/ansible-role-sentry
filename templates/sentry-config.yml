@@ -1,0 +1,4 @@
+system.url-prefix: {{ sentry_url_prefix }}
+system.admin-email: {{ sentry_admin_email }}
+auth.allow-registration: false
+beacon.anonymous: true
