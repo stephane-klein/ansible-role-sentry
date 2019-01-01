@@ -11,3 +11,5 @@ This Ansible Role install [Sentry](https://sentry.io) with all its dependencies 
 Installation is based on [docker-compose.yml](templates/docker-compose.yml) file.
 
 See [Ansible Role Sentry Example](https://github.com/harobed/ansible-role-sentry-example) to understand how to use this role.
+
+See configuration variables in [`defaults/main.yml`](defaults/main.yml) or in [example](https://github.com/harobed/ansible-role-sentry-example/blob/master/inventory/group_vars/all.yml).
