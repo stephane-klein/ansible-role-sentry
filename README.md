@@ -1,4 +1,4 @@
-# Sentry Ansible Galaxy
+# Sentry Ansible Role
 
 This role is based on [Sentry docker-compose example](https://github.com/Its-Alex/sentry-docker-example) repository.
 
