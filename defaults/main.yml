@@ -14,7 +14,7 @@ sentry_letsencrypt_host:
 sentry_letsencrypt_email:
 
 sentry_url_prefix: http://sentry.example.com
-sentry_admin_email : admin@example.com
+sentry_admin_email: admin@example.com
 
 sentry_docker_image_tag: 9.0.0
 

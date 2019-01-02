@@ -35,7 +35,7 @@
     name: sentry
     image: sentry:9.0.0
     command: sentry config generate-secret-key
-    restart_policy : no
+    restart_policy: no
     cleanup: yes
     detach: false
   register: generate_sentry_secret_key
@@ -79,7 +79,7 @@
   changed_when: False
 
 - name: Create Sentry admin user
-  shell: docker-compose run --rm sentry sentry createuser --email {{ sentry_admin_user }}	--password {{ sentry_admin_password }}	--superuser --no-input && touch .ansible_admin_user_created
+  shell: docker-compose run --rm sentry sentry createuser --email {{ sentry_admin_user }} --password {{ sentry_admin_password }} --superuser --no-input && touch .ansible_admin_user_created
   args:
     chdir: "{{ sentry_project_path }}"
     creates: .ansible_admin_user_created
