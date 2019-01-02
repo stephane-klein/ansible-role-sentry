@@ -1,5 +1,5 @@
 galaxy_info:
-  role_name: harobed.sentry
+  role_name: sentry
   author: harobed
   description: Install Sentry based on docker-compose.yml file
   license: "license (BSD, MIT)"
