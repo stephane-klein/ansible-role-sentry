@@ -3,32 +3,26 @@
   file:
     path: "{{ sentry_project_path }}"
     state: directory
-
+  
 - name: Upload docker-compose.yml to {{ sentry_project_path }}/docker-compose.yml
   template:
-    src: "docker-compose.yml"
+    src: "docker-compose.yml.j2"
     dest: "{{ sentry_project_path }}/docker-compose.yml"
 
 - name: Upload docker-compose-tools.yml to {{ sentry_project_path }}/docker-compose-tools.yml
   template:
-    src: "docker-compose-tools.yml"
+    src: "docker-compose-tools.yml.j2"
     dest: "{{ sentry_project_path }}/docker-compose-tools.yml"
 
 - name: Upload sentry-config.yml to {{ sentry_project_path }}/sentry-config.yml
   template:
-    src: sentry-config.yml
+    src: sentry-config.yml.j2
     dest: "{{ sentry_project_path }}/sentry-config.yml"
 
-- name: Pull all Docker images
-  command: docker-compose pull
-  args:
-    chdir: "{{ sentry_project_path }}"
-  changed_when: False
-
-- name: Check if env file exists
+- name: Check if sentry_secret_key file exists
   stat:
-    path: "{{ sentry_project_path }}/env"
-  register: env_file_result
+    path: "{{ sentry_project_path }}/sentry_secret_key"
+  register: sentry_secret_key_file_result
 
 - name: Generate SENTRY_SECRET_KEY
   docker_container:
@@ -39,15 +33,30 @@
     cleanup: yes
     detach: false
   register: generate_sentry_secret_key
-  when: env_file_result.stat.exists == False
+  when: sentry_secret_key_file_result.stat.exists == False
 
-- name: Write SENTRY_SECRET_KEY to {{ sentry_project_path }}/env
+- name: Write SENTRY_SECRET_KEY to {{ sentry_project_path }}/sentry_secret_key
+  copy:
+    content: "{{ generate_sentry_secret_key.ansible_facts.docker_container.Output }}"
+    dest: "{{ sentry_project_path }}/sentry_secret_key"
+  when: sentry_secret_key_file_result.stat.exists == False
+
+- name: Read {{ sentry_project_path }}/sentry_secret_key file content
+  slurp:
+    src: "{{ sentry_project_path }}/sentry_secret_key"
+  register: sentry_secret_key
+
+- name: Upload env-sentry to {{ sentry_project_path }}/env-sentry
   template:
-    src: env
-    dest: "{{ sentry_project_path }}/env"
-  vars:
-    sentry_secret_key: "{{ generate_sentry_secret_key.ansible_facts.docker_container.Output }}"
-  when: env_file_result.stat.exists == False
+    src: env-sentry.j2
+    dest: "{{ sentry_project_path }}/env-sentry"
+
+- name: Pull all Docker images
+  command: docker-compose pull
+  args:
+    chdir: "{{ sentry_project_path }}"
+  changed_when: False
+
 
 - name: Start Redis and PostgreSQL services
   docker_service:
@@ -83,6 +92,22 @@
   args:
     chdir: "{{ sentry_project_path }}"
     creates: .ansible_admin_user_created
+
+- name: Start Postfix service
+  docker_service:
+    project_src: "{{ sentry_project_path }}"
+    services:
+      - postfix
+    state: present
+    pull: yes
+    recreate: smart
+  when: sentry_posfix_domain != ""
+
+- name: Fetch {{ sentry_postfix_dkim_path }}/dkim.public to {{ sentry_fetch_dkim_public_key_path }}
+  fetch:
+    src: "{{ sentry_postfix_dkim_path }}/dkim.public"
+    dest: "{{ sentry_fetch_dkim_public_key_path }}"
+    flat: yes
 
 - name: Start Sentry services (Sentry + Cron + Worker)
   docker_service:

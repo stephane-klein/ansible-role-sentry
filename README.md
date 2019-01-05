@@ -15,3 +15,5 @@ See [Ansible Role Sentry Example](https://github.com/harobed/ansible-role-sentry
 See configuration variables in [`defaults/main.yml`](defaults/main.yml) or in [example](https://github.com/harobed/ansible-role-sentry-example/blob/master/inventory/group_vars/all.yml).
 
 Use  `--extra-vars "sentry_uninstall=true"` to uninstall Sentry.
+
+If you enable `sentry_posfix_domain` variable, you must put [DKIM](https://en.wikipedia.org/wiki/DomainKeys_Identified_Mail) entry in your DNS configuration. For more information see [Sentry docker-compose example](https://github.com/Its-Alex/sentry-docker-example).

@@ -9,7 +9,7 @@ services:
     {% endif -%}
     volumes:
       - ./sentry-config.yml:/etc/sentry/config.yml
-    env_file: env
+    env_file: env-sentry
     environment:
       {% if sentry_virtual_host -%}
       VIRTUAL_HOST: {{ sentry_virtual_host }}
@@ -26,7 +26,7 @@ services:
   cron:
     image: sentry:{{ sentry_docker_image_tag }}
     restart: unless-stopped
-    env_file: env
+    env_file: env-sentry
     environment:
       SENTRY_REDIS_HOST: redis
       SENTRY_POSTGRES_HOST: postgres
@@ -37,7 +37,7 @@ services:
   worker:
     image: sentry:{{ sentry_docker_image_tag }}
     restart: unless-stopped
-    env_file: env
+    env_file: env-sentry
     environment:
       SENTRY_REDIS_HOST: redis
       SENTRY_POSTGRES_HOST: postgres
@@ -57,6 +57,18 @@ services:
       - POSTGRES_USER=sentry
     volumes:
       - {{ sentry_postgres_path }}:/var/lib/postgresql/data
+
+  {% if sentry_posfix_domain -%}
+  postfix:
+    image: marvambass/versatile-postfix:latest
+    restart: unless-stopped
+    volumes:
+      - {{ sentry_postfix_dkim_path }}:/etc/postfix/dkim/
+      - {{ sentry_postfix_maildirs_path }}:/var/mail
+    environment:
+      - DKIM_SELECTOR={{ sentry_dkim_selector }}
+    command: {{ sentry_posfix_domain }} user:password
+  {%- endif %}
 
 networks:
   default:

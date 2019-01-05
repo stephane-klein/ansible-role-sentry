@@ -1,0 +1,21 @@
+version: '3.7'
+services:
+  wait_redis:
+    image: "waisbrot/wait"
+    environment:
+      TARGETS: redis:6379
+
+  wait_postgres:
+    image: "waisbrot/wait"
+    environment:
+      TARGETS: postgres:5432
+
+  {% if sentry_posfix_domain -%}
+  test-mail:
+    image: harobed/docker-heirloom-mailx:latest
+    command: mailx -v -r "noreply@{{ sentry_posfix_domain }}" -s "Sentry test" -S smtp=smtp://postfix:25 -S smtp-auth=login -S smtp-auth-user="user" -S smtp-auth-password="password" test@example.com
+  {%- endif %}
+
+networks:
+  default:
+    name: sentry

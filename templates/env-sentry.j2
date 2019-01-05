@@ -1,0 +1,31 @@
+SENTRY_SECRET_KEY="{{ sentry_secret_key['content']|trim }}"
+SENTRY_REDIS_HOST=redis
+SENTRY_POSTGRES_HOST=postgres
+SENTRY_DB_USER=sentry
+SENTRY_DB_PASSWORD=sentry
+SENTRY_SERVER_EMAIL=noreply@example.com
+{% if sentry_email_host %}
+SENTRY_EMAIL_HOST={{ sentry_email_host }}
+{% elif sentry_posfix_domain %}
+SENTRY_EMAIL_HOST=postfix
+{% endif %}
+{% if sentry_email_port %}
+SENTRY_EMAIL_PORT={{ sentry_email_port }}
+{% elif sentry_posfix_domain %}
+SENTRY_EMAIL_PORT=25
+{% endif %}
+{% if sentry_email_user %}
+SENTRY_EMAIL_USER={{ sentry_email_user }}
+{% elif sentry_posfix_domain %}
+SENTRY_EMAIL_USER=user
+{% endif %}
+{% if sentry_email_password %}
+SENTRY_EMAIL_PASSWORD={{ sentry_email_password }}
+{% elif sentry_posfix_domain %}
+SENTRY_EMAIL_PASSWORD=password
+{% endif %}
+{% if sentry_email_use_tls %}
+SENTRY_EMAIL_PASSWORD={{ sentry_email_use_tls }}
+{% elif sentry_posfix_domain %}
+SENTRY_EMAIL_PASSWORD=True
+{% endif %}
