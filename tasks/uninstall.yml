@@ -15,6 +15,16 @@
     path: "{{ sentry_postgres_path }}"
     state: absent
 
+- name: Remove Sentry Postfix Dkim data
+  file:
+    path: "{{ sentry_postfix_dkim_path }}"
+    state: absent
+
+- name: Remove Sentry Postfix Maildirs data
+  file:
+    path: "{{ sentry_postfix_maildirs_path }}"
+    state: absent
+
 - name: Remove Sentry Project content
   file:
     path: "{{ sentry_project_path }}"
