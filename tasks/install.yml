@@ -33,13 +33,13 @@
     cleanup: yes
     detach: false
   register: generate_sentry_secret_key
-  when: sentry_secret_key_file_result.stat.exists == False
+  when: not sentry_secret_key_file_result.stat.exists
 
 - name: Write SENTRY_SECRET_KEY to {{ sentry_project_path }}/sentry_secret_key
   copy:
     content: "{{ generate_sentry_secret_key.ansible_facts.docker_container.Output }}"
     dest: "{{ sentry_project_path }}/sentry_secret_key"
-  when: sentry_secret_key_file_result.stat.exists == False
+  when: not sentry_secret_key_file_result.stat.exists
 
 - name: Read {{ sentry_project_path }}/sentry_secret_key file content
   slurp:
@@ -88,7 +88,13 @@
   changed_when: False
 
 - name: Create Sentry admin user
-  shell: docker-compose run --rm sentry sentry createuser --email {{ sentry_admin_user }} --password {{ sentry_admin_password }} --superuser --no-input && touch .ansible_admin_user_created
+  shell: >
+    docker-compose run --rm sentry sentry createuser
+    --email {{ sentry_admin_user }}
+    --password {{ sentry_admin_password }}
+    --superuser
+    --no-input &&
+    touch .ansible_admin_user_created
   args:
     chdir: "{{ sentry_project_path }}"
     creates: .ansible_admin_user_created
