@@ -24,7 +24,7 @@ sentry_uninstall: false
 
 # sentry_postfix_domain: sentry.example.com
 # keep empty to disable postfix service
-sentry_postfix_domain:
+sentry_postfix_domain: ""
 sentry_server_email: noreply@example.com
 sentry_dkim_selector: sentry
 sentry_postfix_dkim_path: /var/lib/sentry/postfix/dkim/
