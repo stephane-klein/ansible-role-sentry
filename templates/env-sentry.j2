@@ -25,7 +25,7 @@ SENTRY_EMAIL_PASSWORD={{ sentry_email_password }}
 SENTRY_EMAIL_PASSWORD=password
 {% endif %}
 {% if sentry_email_use_tls %}
-SENTRY_EMAIL_PASSWORD={{ sentry_email_use_tls }}
+SENTRY_EMAIL_USE_TLS={{ sentry_email_use_tls }}
 {% elif sentry_postfix_domain %}
-SENTRY_EMAIL_PASSWORD=True
+SENTRY_EMAIL_USE_TLS=True
 {% endif %}
