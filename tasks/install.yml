@@ -114,6 +114,7 @@
     src: "{{ sentry_postfix_dkim_path }}/dkim.public"
     dest: "{{ sentry_fetch_dkim_public_key_path }}"
     flat: yes
+  when: sentry_postfix_domain != ""
 
 - name: Start Sentry services (Sentry + Cron + Worker)
   docker_service:
