@@ -1,3 +1,4 @@
+---
 # Define where Sentry configuration files are installed (docker-compose.yml...)
 sentry_project_path: "/srv/sentry"
 
@@ -21,7 +22,7 @@ sentry_docker_image_tag: 9.0.0
 # It's action flag to uninstall Sentry
 sentry_uninstall: false
 
-#sentry_posfix_domain: sentry.example.com
+# sentry_posfix_domain: sentry.example.com
 # keep empty to disable postfix service
 sentry_posfix_domain:
 sentry_server_email: noreply@example.com

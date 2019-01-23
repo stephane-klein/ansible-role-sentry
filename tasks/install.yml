@@ -3,7 +3,7 @@
   file:
     path: "{{ sentry_project_path }}"
     state: directory
-  
+
 - name: Upload docker-compose.yml to {{ sentry_project_path }}/docker-compose.yml
   template:
     src: "docker-compose.yml.j2"
