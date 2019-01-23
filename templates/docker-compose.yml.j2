@@ -58,7 +58,7 @@ services:
     volumes:
       - {{ sentry_postgres_path }}:/var/lib/postgresql/data
 
-  {% if sentry_posfix_domain -%}
+  {% if sentry_postfix_domain -%}
   postfix:
     image: marvambass/versatile-postfix:latest
     restart: unless-stopped
@@ -67,7 +67,7 @@ services:
       - {{ sentry_postfix_maildirs_path }}:/var/mail
     environment:
       - DKIM_SELECTOR={{ sentry_dkim_selector }}
-    command: {{ sentry_posfix_domain }} user:password
+    command: {{ sentry_postfix_domain }} user:password
   {%- endif %}
 
 networks:

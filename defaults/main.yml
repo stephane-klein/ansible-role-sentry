@@ -22,9 +22,9 @@ sentry_docker_image_tag: 9.0.0
 # It's action flag to uninstall Sentry
 sentry_uninstall: false
 
-# sentry_posfix_domain: sentry.example.com
+# sentry_postfix_domain: sentry.example.com
 # keep empty to disable postfix service
-sentry_posfix_domain:
+sentry_postfix_domain:
 sentry_server_email: noreply@example.com
 sentry_dkim_selector: sentry
 sentry_postfix_dkim_path: /var/lib/sentry/postfix/dkim/

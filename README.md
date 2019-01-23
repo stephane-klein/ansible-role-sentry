@@ -16,4 +16,4 @@ See configuration variables in [`defaults/main.yml`](defaults/main.yml) or in [e
 
 Use  `--extra-vars "sentry_uninstall=true"` to uninstall Sentry.
 
-If you enable `sentry_posfix_domain` variable, you must put [DKIM](https://en.wikipedia.org/wiki/DomainKeys_Identified_Mail) entry in your DNS configuration. For more information see [Sentry docker-compose example](https://github.com/Its-Alex/sentry-docker-example).
+If you enable `sentry_postfix_domain` variable, you must put [DKIM](https://en.wikipedia.org/wiki/DomainKeys_Identified_Mail) entry in your DNS configuration. For more information see [Sentry docker-compose example](https://github.com/Its-Alex/sentry-docker-example).

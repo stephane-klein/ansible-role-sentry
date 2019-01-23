@@ -107,7 +107,7 @@
     state: present
     pull: yes
     recreate: smart
-  when: sentry_posfix_domain != ""
+  when: sentry_postfix_domain != ""
 
 - name: Fetch {{ sentry_postfix_dkim_path }}/dkim.public to {{ sentry_fetch_dkim_public_key_path }}
   fetch:
