@@ -144,3 +144,16 @@
     src: display-sentry-dsn.sh
     dest: "{{ sentry_project_path }}/display-sentry-dsn.sh"
     mode: 0700
+
+- name: Execute display-sentry-dsn.sh
+  command: ./display-sentry-dsn.sh
+  args:
+    chdir: "{{ sentry_project_path }}"
+  changed_when: False
+  register: sentry_dsn
+
+- name: Save sentry_dsn value to {{ sentry_ftech_sentry_dsn_path }}
+  local_action:
+    module: copy
+    content: "{{ sentry_dsn.stdout }}"
+    dest: "{{ sentry_ftech_sentry_dsn_path }}"

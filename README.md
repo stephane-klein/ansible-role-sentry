@@ -19,3 +19,5 @@ Use  `--extra-vars "sentry_uninstall=true"` to uninstall Sentry.
 
 If you enable `sentry_postfix_domain` variable, you must put [DKIM](https://en.wikipedia.org/wiki/DomainKeys_Identified_Mail) public key (see in `fetch/dkim.public` file) entry in your DNS configuration.
 For more information see [Sentry docker-compose example](https://github.com/Its-Alex/sentry-docker-example).
+
+After Sentry installation, the first default Sentry dsn is downloaded in `fetch/sentry_dsn.txt` file.
