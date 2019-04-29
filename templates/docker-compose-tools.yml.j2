@@ -13,7 +13,7 @@ services:
   {% if sentry_postfix_domain -%}
   test-mail:
     image: harobed/docker-heirloom-mailx:latest
-    command: mailx -v -r "noreply@{{ sentry_postfix_domain }}" -s "Sentry test" -S smtp=smtp://postfix:25 -S smtp-auth=login -S smtp-auth-user="user" -S smtp-auth-password="password" test@example.com
+    command: mailx -v -r "noreply@{{ sentry_postfix_domain }}" -s "Sentry test" -S smtp=smtp://postfix:25 -S smtp-auth=login -S smtp-auth-user="user" -S smtp-auth-password="password" {{ sentry_test_mail }}
   {%- endif %}
 
 networks:
