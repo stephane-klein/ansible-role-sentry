@@ -152,8 +152,8 @@
   changed_when: False
   register: sentry_dsn
 
-- name: Save sentry_dsn value to {{ sentry_ftech_sentry_dsn_path }}
+- name: Save sentry_dsn value to {{ sentry_fetch_sentry_dsn_path }}
   local_action:
     module: copy
     content: "{{ sentry_dsn.stdout }}"
-    dest: "{{ sentry_ftech_sentry_dsn_path }}"
+    dest: "{{ sentry_fetch_sentry_dsn_path }}"

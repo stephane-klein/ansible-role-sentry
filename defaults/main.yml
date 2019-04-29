@@ -37,3 +37,4 @@ sentry_email_password:
 sentry_email_use_tls:
 
 sentry_fetch_dkim_public_key_path: "{{ inventory_dir }}/../fetch/dkim.public"
+sentry_fetch_sentry_dsn_path: "{{ inventory_dir }}/../fetch/sentry_dsn.txt"
