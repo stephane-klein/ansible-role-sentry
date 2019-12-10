@@ -59,7 +59,7 @@
 
 
 - name: Start Redis and PostgreSQL services
-  docker_service:
+  docker_compose:
     project_src: "{{ sentry_project_path }}"
     services:
       - redis
@@ -100,7 +100,7 @@
     creates: .ansible_admin_user_created
 
 - name: Start Postfix service
-  docker_service:
+  docker_compose:
     project_src: "{{ sentry_project_path }}"
     services:
       - postfix
@@ -124,7 +124,7 @@
   when: sentry_postfix_domain != ""
 
 - name: Start Sentry services (Sentry + Cron + Worker)
-  docker_service:
+  docker_compose:
     project_src: "{{ sentry_project_path }}"
     services:
       - sentry
