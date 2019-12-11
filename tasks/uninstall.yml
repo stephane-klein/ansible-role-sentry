@@ -5,7 +5,7 @@
   register: docker_compose_file
 
 - name: Stop all Sentry services
-  docker_service:
+  docker_compose:
     project_src: "{{ sentry_project_path }}"
     state: absent
   when: docker_compose_file.stat.exists
