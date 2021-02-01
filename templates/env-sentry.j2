@@ -3,7 +3,11 @@ SENTRY_REDIS_HOST=redis
 SENTRY_POSTGRES_HOST=postgres
 SENTRY_DB_USER=sentry
 SENTRY_DB_PASSWORD=sentry
+{% if sentry_server_email %}
+SENTRY_SERVER_EMAIL={{ sentry_server_email }}
+{% elif sentry_postfix_domain %}
 SENTRY_SERVER_EMAIL=noreply@example.com
+{% endif %}
 {% if sentry_email_host %}
 SENTRY_EMAIL_HOST={{ sentry_email_host }}
 {% elif sentry_postfix_domain %}
