@@ -37,7 +37,7 @@
 
 - name: Write SENTRY_SECRET_KEY to {{ sentry_project_path }}/sentry_secret_key
   copy:
-    content: "{{ generate_sentry_secret_key.ansible_facts.docker_container.Output }}"
+    content: "{{ generate_sentry_secret_key }}"
     dest: "{{ sentry_project_path }}/sentry_secret_key"
   when: not sentry_secret_key_file_result.stat.exists
 
